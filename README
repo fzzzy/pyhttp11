@@ -1,0 +1,31 @@
+This is a Python binding for the C http11 parser from Ruby's Mongrel web server.
+
+To build and install:
+
+  python setup.py install
+
+To use:
+
+  import pyhttp11
+
+  h = pyhttp11.HttpParser()
+
+  print h.execute("POST http://foo.com/ HTTP/1.1\r\nHost: foo.com\r\nContent-length: 12\r\n\r\nHello, World")
+  print h.has_error()
+  print h.is_finished()
+  print h.environ
+
+The h.environ dictionary will then be almost suitable for use as a wsgi environment dictionary, except for the following changes which need to be made:
+
+ * Keys that start with HTTP_ have hyphens (-) like HTTP headers, not underscores (_) as required by the wsgi spec.
+
+ * The wsgi CONTENT_LENGTH is instead named HTTP_CONTENT-LENGTH
+
+ * There is no wsgi.input object with the correct semantics; the body is present in the environment dictionary as REQUEST_BODY.
+
+ * There may be more inconsistencies; if you find any please let me know and I'll document them or fix them.
+
+There is an example.py file that shows what typical usage of this module would look like. The example file requires eventlet.
+
+Donovan Preston
+January 14, 2009
