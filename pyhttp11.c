@@ -43,7 +43,11 @@ HttpParserObject_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 void http_field_callback(void *data, const char *field_name, size_t field_name_len, const char *field_value, size_t field_value_size) {
-    PyDict_SetItem((PyObject *)data, PyString_FromFormat("HTTP_%s", field_name), PyString_FromStringAndSize(field_value, field_value_size));
+    char field[field_name_len + 5];
+    strncpy(field, "HTTP_", 5);
+    strncpy(field + 5, field_name, field_name_len);
+
+    PyDict_SetItem((PyObject *)data, PyString_FromStringAndSize(field, field_name_len + 5), PyString_FromStringAndSize(field_value, field_value_size));
 }
 
 void request_uri_callback(void *data, const char * buffer, size_t buffer_len) {
